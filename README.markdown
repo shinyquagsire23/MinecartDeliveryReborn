@@ -35,7 +35,7 @@ This plugin does not support the following:
 * Permissions
 * Multi-world support
 
-Before you ask why, it's simple: at the moment I don't have any need for these in my own server, hence the lack of support for it.
+Support will be added soon!
 
 Support
 -----------
