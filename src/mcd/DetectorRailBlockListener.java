@@ -75,7 +75,7 @@ public class DetectorRailBlockListener implements Listener {
             for(Entity entity:entities) 
             {
             	//System.out.println("entity");
-            	System.out.println(entity.getEntityId());
+            	//System.out.println(entity.getEntityId());
                 if(isValidStorageMinecart(entity, block.getLocation())) 
                 {
                 	//System.out.println("valid");
