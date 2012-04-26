@@ -71,7 +71,7 @@ public class DetectorRailBlockListener implements Listener {
         if(entities!=null) 
         {
         	//System.out.println("nullifier");
-        	System.out.println(entities.length);
+        	//System.out.println(entities.length);
             for(Entity entity:entities) 
             {
             	//System.out.println("entity");
