@@ -24,8 +24,9 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.util.Vector;
 
@@ -33,9 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
-public class DropoffPointListener extends BlockListener {
+public class DropoffPointListener implements Listener {
     private static final BlockFace[] searchDirections={
             BlockFace.NORTH,
             BlockFace.SOUTH,
@@ -74,33 +74,42 @@ public class DropoffPointListener extends BlockListener {
         return dropoffPoints;
     }
 
-    @Override
+    @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        super.onBlockPlace(event);
-
         Block blockPlaced=event.getBlockPlaced();
 
-        if(blockPlaced!=null && Material.CHEST==blockPlaced.getType()) {
-            scanForDetectorRail(blockPlaced);
-        } else if(blockPlaced!=null && Material.DETECTOR_RAIL==blockPlaced.getType()) {
-            scanForChests(blockPlaced);
-        }
+        if(blockPlaced!=null) 
+        {
+        	Material placed = blockPlaced.getType();
+        	if(Material.CHEST == placed || Material.FURNACE == placed || Material.BURNING_FURNACE == placed || Material.DISPENSER == placed)
+        		scanForDetectorRail(blockPlaced);
+        	else if(Material.DETECTOR_RAIL == placed) 
+            {
+                scanForChests(blockPlaced);
+            }
+        } 
     }
 
-    @Override
+    @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        super.onBlockBreak(event);
-
         Block blockBreak=event.getBlock();
-
-        if(blockBreak!=null && Material.CHEST==blockBreak.getType()) {
-            removeChestFromDropoffPoint(blockBreak.getLocation());
-        } else if(blockBreak!=null && Material.DETECTOR_RAIL==blockBreak.getType()) {
-            getDropoffPoints().remove(blockBreak.getLocation().toString());
-            this.minecartDelivery.removeDetectorRailFromConfig(blockBreak.getLocation());
+        if(blockBreak!=null) 
+        {
+        	Material placed = blockBreak.getType();
+        	if(Material.CHEST == placed || Material.FURNACE == placed || Material.BURNING_FURNACE == placed || Material.DISPENSER == placed)
+        	{
+        		removeChestFromDropoffPoint(blockBreak.getLocation());
+        	}
+        	else if(Material.DETECTOR_RAIL==placed) 
+            {
+                getDropoffPoints().remove(blockBreak.getLocation().toString());
+                this.minecartDelivery.removeDetectorRailFromConfig(blockBreak.getLocation());
+            }
         }
+        
     }
 
+    
     private void removeChestFromDropoffPoint(Location location) {
         for(String key:getDropoffPoints().keySet()) {
             DropoffPoint dp=getDropoffPoints().get(key);
@@ -116,7 +125,10 @@ public class DropoffPointListener extends BlockListener {
         for(BlockFace blockFace:searchDirections) {
             Block searchBlock=scanBlock.getRelative(blockFace, 1);
 
-            if(searchBlock!=null && Material.CHEST==searchBlock.getType()) {
+            if(searchBlock!=null) 
+            {
+            	if(Material.CHEST==searchBlock.getType() || Material.FURNACE==searchBlock.getType() || Material.BURNING_FURNACE==searchBlock.getType() || Material.DISPENSER==searchBlock.getType())
+            	{
                 DropoffPoint dp=getDropoffPoints().get(detectorRailLocation.toString());
                 if(dp==null) {
                     dp=new DropoffPoint();
@@ -127,6 +139,7 @@ public class DropoffPointListener extends BlockListener {
                 dp.getChestLocations().addAll(lookForAdjacentChests(searchBlock.getLocation()));
 
                 this.minecartDelivery.addDetectorRailToConfig(detectorRailLocation);
+            	}
             }
         }
     }

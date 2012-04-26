@@ -19,13 +19,11 @@
 package mcd;
 
 import org.bukkit.Location;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -53,9 +51,9 @@ public class MinecartDelivery extends JavaPlugin {
         configureListeners();
 
         PluginManager pluginManager=this.getServer().getPluginManager();
-        pluginManager.registerEvent(Event.Type.BLOCK_PLACE, this.dropoffPointListener, Event.Priority.Normal, this);
-        pluginManager.registerEvent(Event.Type.BLOCK_BREAK, this.dropoffPointListener, Event.Priority.Normal, this);
-        pluginManager.registerEvent(Event.Type.REDSTONE_CHANGE, this.detectorRailBlockListener, Event.Priority.Normal, this);
+        pluginManager.registerEvents(this.dropoffPointListener, this);
+        pluginManager.registerEvents(this.detectorRailBlockListener, this);
+        
 
         log.info("MinecartDelivery has been loaded!");
     }
