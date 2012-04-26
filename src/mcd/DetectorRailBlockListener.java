@@ -132,14 +132,14 @@ public class DetectorRailBlockListener implements Listener {
     private boolean isValidStorageMinecart(Entity entity, Location location) {
         if(!(entity instanceof StorageMinecart)) 
         {
-        	System.out.println(entity.getEntityId());
+        	//System.out.println(entity.getEntityId());
             return false;
         }
 
         StorageMinecart storageMinecart=(StorageMinecart) entity;
         double distanceToDetectorRail=storageMinecart.getLocation().distance(location);
 
-        System.out.println(distanceToDetectorRail);
+        //System.out.println(distanceToDetectorRail);
         return distanceToDetectorRail <= 1.5;
     }
 
