@@ -84,8 +84,8 @@ public class DetectorRailBlockListener implements Listener {
                     Block scanBlock=torchloc.clone().add(0.0, -2.0, 0.0).getBlock();
                     //System.out.println(scanBlock.getX() + " " + scanBlock.getZ() + " " + scanBlock.getY());
                     if(scanBlock.getBlockPower() > 0)
-                    	addItemsToDropoff(storageMinecart, dropoffPoint,false);
-                    else addItemsToDropoff(storageMinecart,dropoffPoint,true);
+                    	addItemsToDropoff(storageMinecart, dropoffPoint,event, false);
+                    else addItemsToDropoff(storageMinecart,dropoffPoint,event, true);
                 }
             }
         }
@@ -95,7 +95,7 @@ public class DetectorRailBlockListener implements Listener {
     
     @SuppressWarnings("unused")
 	private enum DropOffType {CHEST,FURNACE,DISPENSER};
-    private void addItemsToDropoff(StorageMinecart storageMinecart, DropoffPoint dropoffPoint,	boolean from)
+    private void addItemsToDropoff(StorageMinecart storageMinecart, DropoffPoint dropoffPoint,	BlockRedstoneEvent event, boolean from)
     {
     	List<Location> chestLocations=dropoffPoint.getChestLocations();
         List<Chest> dropoffChests=new ArrayList<Chest>();
@@ -125,7 +125,10 @@ public class DetectorRailBlockListener implements Listener {
         if(furnaces.size() > 0)
         	transferItemsToFurnace(storageMinecart, dropoffPoint);
         if(dispensers.size() > 0)
+        {
         	transferItemsToDispenser(storageMinecart,dropoffPoint);
+        	event.setNewCurrent(0);
+        }
         }
     }
 
