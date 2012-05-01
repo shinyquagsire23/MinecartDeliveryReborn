@@ -117,6 +117,8 @@ public class DetectorRailBlockListener implements Listener {
             	transferItemsFromDropoffPoint(storageMinecart, dropoffPoint);
             if(furnaces.size() > 0)
             	transferItemsFromFurnace(storageMinecart, dropoffPoint);
+            if(dispensers.size() > 0)
+            	transferItemsFromDispenser(storageMinecart, dropoffPoint);
         }
         else
         {
@@ -361,6 +363,79 @@ public class DetectorRailBlockListener implements Listener {
 
         // update state of all chests
         for(Chest chest:dropoffChests) {
+            chest.update();
+        }
+        
+        }
+    }
+    
+    private void transferItemsFromDispenser(StorageMinecart storageMinecart, DropoffPoint dropoffPoint) {
+        Inventory minecartInventory=storageMinecart.getInventory();
+
+        List<Location> chestLocations=dropoffPoint.getChestLocations();
+        List<Dispenser> dropoffChests=new ArrayList<Dispenser>();
+
+        for(Location location:chestLocations) 
+        {
+        	if(location.getBlock().getType() == Material.DISPENSER)
+            	dropoffChests.add((Dispenser)location.getBlock().getState());
+        }
+
+        List<Dispenser> duplicateListOfChests=new ArrayList<Dispenser>(dropoffChests);
+        Iterator<Dispenser> iterator=duplicateListOfChests.iterator();
+
+        /*if(minecartItems!=null) 
+        {
+            for(int i=0; i< minecartItems.length; i++) 
+            {
+                ItemStack item = minecartItems[i];
+                if(item!=null && item.getAmount()>0) 
+                {
+                    takeFromAvailableDropoffChest(i, minecartInventory, item, dropoffChests);
+                }
+            }
+        }*/
+        if(minecartInventory != null)
+        {
+        while(iterator.hasNext()) 
+        {
+            Dispenser chest=iterator.next();
+            ItemStack[] chestItems = chest.getInventory().getContents();
+            Inventory chestInventory = chest.getInventory();
+            for(int i=0; i < chestItems.length; i++) 
+            {
+            	//System.out.println("loop");
+                Map<Integer, ItemStack> excess=new HashMap<Integer, ItemStack>();
+                ItemStack item = chestItems[i];
+                if(item!=null && item.getAmount() > 0) 
+                {
+                    excess.putAll(minecartInventory.addItem(item));
+                	if(excess.size()>0) 
+                    {
+                        for(Integer key:excess.keySet()) 
+                        {
+                            ItemStack excessItem=excess.get(key);
+                            item.setAmount(excessItem.getAmount());
+                        }
+
+                        excess.clear();
+                        iterator.remove();
+                    } 
+                    else 
+                    {
+                    	//System.out.println("null");
+                        item=null;
+                        //continue;
+                    }
+                	chestInventory.setItem(i, item);
+                    //takeFromAvailableDropoffChest(i, minecartInventory, item, dropoffChests);
+                }
+            }
+            
+        }
+
+        // update state of all chests
+        for(Dispenser chest:dropoffChests) {
             chest.update();
         }
         
