@@ -45,6 +45,6 @@ This plugin is fairly new, and is being tested on our server. If you find any bu
 Download
 --------
 
-A built jar file is available for download [here](https://github.com/downloads/shinyquagsier23/MinecartDelivery/MinecartDeliveryReborn.jar).
+A built jar file is available for download [here](https://github.com/downloads/shinyquagsire23/MinecartDeliveryReborn/MinecartDeliveryReborn.jar).
 
 I will be uploading the latest stable version here. I will also update the one in [bukkitdev](http://dev.bukkit.org/server-mods/minecartdeliveryreborn/), but because they require approval, it'll probably take some time.
